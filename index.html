@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <title>Guess the Number</title>
+    <meta name="description" content="終極密碼">
+    <meta property="og:url" content="http://limzhiyang.com/codetolearn/project5-guessthenumber/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Guess the Number" />
+    <meta property="og:description" content="終極密碼" />
+    <meta property="og:image" content="http://limzhiyang.com/codetolearn/banner-images/project5.jpg" />
+
+    <!-- Bootstrap CSS -->
+  </head>
+  <body id="myBody" class="bg-dark">
+    <nav id="navigation" class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Guess the Number</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="http://limzhiyang.com/codetolearn/" target="_blank">Code to Learn</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://limzhiyang.com/profile/" target="_blank">About Me</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-sm-3 col-1"></div>
+        <div class="col-sm-6 col-10 mt-5">
+            <h1 class="text-light text-center" id="header">Guess the Number</h1>
+            <p class="text-light text-center mt-3 mb-1" id="myDescription">Enter a number between<br /><h3 class="text-light text-center pb-2" id="range"><b><span id="lowest">1</span> - <span id="highest">1000</span></b></h3></p>
+            <form id="myForm">
+              <div class="form-group">
+                  <input type="number" inputmode="numeric" pattern="[0-9]*" class="text-center form-control form-control-lg" id="inputValue" placeholder="Enter a Number">
+              </div>
+              <button id="guess" type="submit" class="btn-danger btn btn-primary btn-lg btn-block">Guess</button>
+              <button id="replay" type="submit" class="d-none btn-light btn btn-primary btn-lg btn-block">Play Again</button>
+            </form>
+            <p class="text-center text-light mt-3"><small><span id="error"></span></small></p>
+            <p class="text-secondary text-center mb-1 mt-5"><small>Report Bug:</small></p>
+            <a href="mailto:zhiyang.designer@gmail.com" style="text-decoration: none;"><button type="submit" class="d-block btn btn-sm btn-secondary" style="margin: 0 auto;">Send</button></a>
+        </div>  
+        <div class="col-sm-3 col-1"></div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+<script>
+  
+var randomNum; 
+var userNum;
+var lowestNum = 1;
+var highestNum = 1000;
+
+generateNum();
+
+// generate random number function
+function generateNum() {
+  randomNum = Math.floor((Math.random() * 1000) + 1);
+  return randomNum;
+}
+
+// get current user number from input box
+function getUserNum() {
+  userNum = document.getElementById("inputValue").value;
+}
+
+// prevent oage reload when submitting the form
+var form = document.getElementById("myForm"); 
+function handleForm(event) {   
+  getUserNum();  
+  updateNum();
+  event.preventDefault(); 
+  console.log(lowestNum);
+} 
+form.addEventListener('submit', handleForm);
+
+function updateNum() {
+  if (userNum < randomNum) {
+
+    //show alert if input number is less / more than min and max number
+    if (userNum <= lowestNum || userNum >= highestNum || userNum == "" || userNum == null) {
+      errorText();
+    } else {
+      lowestNum = userNum;
+      document.getElementById("lowest").innerHTML = userNum;
+      clearErrorText();
+      clearField();
+    }
+    
+  } else if (userNum > randomNum) {
+
+    //show alert if input number is less / more than min and max number
+    if (userNum <= lowestNum || userNum >= highestNum || userNum == "" || userNum == null) {
+      errorText();
+      userNum = userNum;
+    } else {
+      highestNum = userNum;
+      document.getElementById("highest").innerHTML = userNum;
+      clearErrorText();
+      clearField();
+    }
+  
+  } else {
+    //if the numbers match
+    numberMatch();
+    clearErrorText();
+  }
+}
+
+function errorText() {
+  var errorTxt = "Oops! Please enter a number that is more than " + lowestNum + " and less than " + highestNum;
+  document.getElementById("error").innerHTML = errorTxt;
+}
+
+function clearErrorText() {
+  document.getElementById("error").innerHTML = "";
+}
+
+function numberMatch() {
+  document.getElementById("myBody").classList.remove('bg-dark');
+  document.getElementById("myBody").classList.add('bg-danger');
+  document.getElementById("navigation").classList.remove('bg-dark');
+  document.getElementById("navigation").classList.add('bg-danger');
+  document.getElementById("replay").classList.remove('d-none');
+  document.getElementById("replay").classList.add('d-block');
+  document.getElementById("header").innerHTML = "Congratulations! <br />You have guessed the number!"
+  $("#guess").hide();
+  $("#myDescription").hide();
+  $("#range").hide();
+}
+
+function resetGame() {
+  location.reload();
+}
+document.getElementById("replay").addEventListener("click", resetGame);
+
+function clearField() {
+    document.getElementById("inputValue").value = "";
+};
+
+console.log(randomNum);
+
+</script>
